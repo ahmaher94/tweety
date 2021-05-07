@@ -7,6 +7,16 @@ use App\Models\Tweet;
 
 class TweetController extends Controller
 {
+
+    public function index()
+    {
+        $tweets = Tweet::latest()->get();
+        return view('tweets.index', [
+            "tweets" => auth()->user()->timeline()
+        ]);
+    }
+
+
     public function store(Request $request){
 
         $attributes = $request->validate(["body" => "required|max:255"]);

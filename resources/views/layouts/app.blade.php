@@ -24,16 +24,31 @@
 <body>
     <div id="app">
 
-        <section class="px-8 py-4 mb-6">
+        <section class="px-8 py-4 mb-3">
             <header class="container mx-auto">
-                <h1>Tweety</h1>
+                <img src="/images/main-logo.png" alt="" width="200px" height="70px">
             </header>
         </section>
 
 
         <section class="py-8">
             <main class="container mx-auto">
-                @yield('content')
+
+                <div class="lg:flex lg:justify-between">
+                    <div class="lg:w-32">
+                        @include('_sidebar-links')
+                    </div>
+
+
+                    @yield('content')
+
+
+                    <div class="lg:w-1/6 bg-blue-100 rounded-lg p-4">
+                        @include('_friends-list')
+                    </div>
+                </div>
+
+
             </main>
         </section>
 

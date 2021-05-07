@@ -6,7 +6,7 @@
         <hr class="mb-4">
 
         <footer class="flex justify-between">
-            <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-full mr-2">
+            <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-full mr-2" width="40px" height="40px">
             <button type="submit" class="bg-blue-500 rounded-lg shadow py-2 px-2 text-white">Tweet</button>
         </footer>
     </form>
