@@ -6,10 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Followable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, Followable;
 
     protected $fillable = [
         'name',
@@ -36,22 +37,19 @@ class User extends Authenticatable
     }
 
     public function tweets(){
-        return $this->hasMany(Tweet::class);
+        return $this->hasMany(Tweet::class)->latest();
     }
 
     public function getAvatarAttribute(){
         return "https://i.pravatar.cc/200?u=".$this->email;
     }
 
-    public function follow(User $user){
-        return $this->follows()->save($user);
-    }
+    // public function getRouteKeyName(){
+    //     return 'name';
+    // }
 
-    public function follows(){
-        return $this->belongsToMany(User::class, 'follows', 'user_id', 'following_user_id');
-    }
-
-    public function getRouteKeyName(){
-        return 'name';
+    public function path($append = ""){
+        $path = route('profile', $this->name);
+        return $append ? "{$path}/{$append}" : $path;
     }
 }
