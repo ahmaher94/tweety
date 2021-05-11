@@ -13,6 +13,8 @@ class User extends Authenticatable
     use HasFactory, Notifiable, Followable;
 
     protected $fillable = [
+        'username',
+        'avatar',
         'name',
         'email',
         'password',
@@ -40,8 +42,8 @@ class User extends Authenticatable
         return $this->hasMany(Tweet::class)->latest();
     }
 
-    public function getAvatarAttribute(){
-        return "https://i.pravatar.cc/200?u=".$this->email;
+    public function getAvatarAttribute($value){
+        return asset($value);
     }
 
     // public function getRouteKeyName(){
@@ -49,7 +51,7 @@ class User extends Authenticatable
     // }
 
     public function path($append = ""){
-        $path = route('profile', $this->name);
+        $path = route('profile', $this->username);
         return $append ? "{$path}/{$append}" : $path;
     }
 }
