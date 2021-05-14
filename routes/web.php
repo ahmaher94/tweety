@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Http\Controllers\TweetController;
+use App\Http\Controllers\FollowController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ExploreController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,14 +25,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware(['auth'])->group(function(){
-    Route::get('/tweets', [App\Http\Controllers\TweetController::class, 'index'])->name('home');
-    Route::post('/tweets', [App\Http\Controllers\TweetController::class, 'store']);
-    Route::post('/profiles/{user:username}/follow', [App\Http\Controllers\FollowController::class, 'store']);
+    Route::get('/tweets', [TweetController::class, 'index'])->name('home');
+    Route::post('/tweets', [TweetController::class, 'store']);
+    Route::post('/profiles/{user:username}/follow', [FollowController::class, 'store']);
 
-    Route::get('/profiles/{user:username}', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile');
-    Route::get('/profiles/{user:username}/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->middleware('can:edit,user');
+    Route::get('/profiles/{user:username}', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profiles/{user:username}/edit', [ProfileController::class, 'edit'])->middleware('can:edit,user');
 
-    Route::patch('/profiles/{user:username}', [App\Http\Controllers\ProfileController::class, 'update']);
+    Route::patch('/profiles/{user:username}', [ProfileController::class, 'update'])->middleware('can:edit,user');
 
+    Route::get('/explore', [ExploreController::class, 'index']);
 });
 

@@ -43,7 +43,7 @@
 
         <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700">Password</label>
-            <input type="text" name="password" id="password" class="border border-gray-400 p-2 w-full" required>
+            <input type="password" name="password" id="password" class="border border-gray-400 p-2 w-full" required>
             @error('password')
             <p class="text-red-500 text-xs mt-2">{{  $message }}</p>
             @enderror
@@ -51,7 +51,7 @@
 
         <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700">Confirm Password</label>
-            <input type="text" name="password_confirmation" id="password_confirmation"
+            <input type="password" name="password_confirmation" id="password_confirmation"
                 class="border border-gray-400 p-2 w-full">
             @error('password_confirmation')
             <p class="text-red-500 text-xs mt-2">{{  $message }}</p>
@@ -59,7 +59,10 @@
         </div>
 
         <div>
-            <button class="big-blue-400  rounded py-2 px-4 hover:big-blue-500" type="submit">Submit</button>
+            <button class="big-blue-400  rounded py-2 px-4 hover:big-blue-500 mr-4" type="submit">Submit</button>
+            <a href="{{ $user->path() }}" class="big-blue-400  rounded py-2 px-4 hover:big-blue-500"
+                type="submit">Cancel</a>
+
         </div>
 
 

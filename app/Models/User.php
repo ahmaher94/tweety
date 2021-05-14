@@ -35,7 +35,7 @@ class User extends Authenticatable
         $freinds = $this->follows()->pluck('users.id');
         return Tweet::whereIn('user_id', $freinds)
                       ->orWhere("user_id", auth()->user()->id)
-                      ->latest()->get();
+                      ->latest()->paginate(20);
     }
 
     public function tweets(){
@@ -43,7 +43,10 @@ class User extends Authenticatable
     }
 
     public function getAvatarAttribute($value){
-        return asset($value);
+        if($value){
+        return asset('storage/avatars/'.$value);
+        }
+        return asset('storage/avatars/default.png');
     }
 
     // public function getRouteKeyName(){
@@ -53,5 +56,9 @@ class User extends Authenticatable
     public function path($append = ""){
         $path = route('profile', $this->username);
         return $append ? "{$path}/{$append}" : $path;
+    }
+
+    public function setPasswordAttribute($value){
+        return $this->attributes['password'] = bcrypt($value);
     }
 }
