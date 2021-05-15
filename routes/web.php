@@ -17,6 +17,8 @@ use App\Http\Controllers\TweetController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\TweetLikeController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,5 +37,9 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/profiles/{user:username}', [ProfileController::class, 'update'])->middleware('can:edit,user');
 
     Route::get('/explore', [ExploreController::class, 'index']);
+
+    Route::post('/tweet/{tweet}/like', [TweetLikeController::class, 'store']);
+    Route::delete('/tweet/{tweet}/like', [TweetLikeController::class, 'destroy']);
+
 });
 

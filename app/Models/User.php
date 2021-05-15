@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Followable;
+use App\Models\Like;
 
 class User extends Authenticatable
 {
@@ -35,11 +36,17 @@ class User extends Authenticatable
         $freinds = $this->follows()->pluck('users.id');
         return Tweet::whereIn('user_id', $freinds)
                       ->orWhere("user_id", auth()->user()->id)
+                      ->withLikes()
                       ->latest()->paginate(20);
     }
 
     public function tweets(){
         return $this->hasMany(Tweet::class)->latest();
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
     }
 
     public function getAvatarAttribute($value){
