@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Tweet;
 use Elastic\Elasticsearch\Client as ElasticsearchClient;
 
+use function PHPSTORM_META\type;
+
 class TweetController extends Controller
 {
 
@@ -14,26 +16,18 @@ class TweetController extends Controller
     public function __construct(ElasticsearchClient $client)
     {
         $this->client = $client;
+
+        $response = $this->client->indices()->exists(['index' => 'tweets']);
+
+        if($response->getStatusCode() == 404){
+            $this->createIndex();
+            echo 'index created';
+        }
     }
 
 
-    // protected $client = null;
-
-    // public function __construct()
-    // {
-    //     $this->client = ElasticsearchClientBuilder::create()
-    //     ->setElasticCloudId(env('ELASTICSEARCH_CLOUD_ID'))
-    //     ->setApiKey(env('ELASTICSEARCH_API_KEY'))
-    //     ->build();
-    // }
-
     public function index()
     {
-
-        $response = $this->client->info();
-
-        echo $response->getStatusCode();
-        
         $tweets = Tweet::latest()->get();
         return view('tweets.index', [
             "tweets" => auth()->user()->timeline()
@@ -50,6 +44,58 @@ class TweetController extends Controller
             "body" => $attributes["body"]
         ]);
 
+        $params = [
+            'index' => 'tweets',
+            'body' => [
+                'tweet' => $attributes["body"],
+                'user_id' => auth()->id()
+            ]
+        ];
+
+        $response = $this->client->index($params);
+        
         return redirect()->route('home');
+    }
+
+    protected function createIndex(){
+        $this->client->indices()->create([
+            'index' => 'tweets',
+            'body' => [
+                'mappings' => [
+                    '_source' => [
+                        'enabled' => true
+                    ],
+                    'properties' => [
+                            'tweet' => [
+                                'type' => 'text'
+                            ],
+                            'user_id' => [
+                                'type' => 'integer'
+                            ]
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    protected function search(Request $request){
+        $searchValue = $request['search'];
+
+        $params = [
+            'index' => 'tweets',
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'tweet' => $searchValue
+                    ]
+                ]
+            ]
+        ];
+
+        $response = $this->client->search($params);
+
+        return view('tweets.search', [
+            "tweets" => $response['hits']['hits']
+        ]);
     }
 }

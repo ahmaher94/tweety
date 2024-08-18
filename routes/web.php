@@ -28,6 +28,7 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/tweets', [TweetController::class, 'index'])->name('home');
+    Route::post('/tweets/search', [TweetController::class, 'search'])->name('search');
     Route::post('/tweets', [TweetController::class, 'store']);
     Route::post('/profiles/{user:username}/follow', [FollowController::class, 'store']);
 
@@ -37,6 +38,7 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/profiles/{user:username}', [ProfileController::class, 'update'])->middleware('can:edit,user');
 
     Route::get('/explore', [ExploreController::class, 'index']);
+
 
     Route::post('/tweet/{tweet}/like', [TweetLikeController::class, 'store']);
     Route::delete('/tweet/{tweet}/like', [TweetLikeController::class, 'destroy']);

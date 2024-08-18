@@ -20,4 +20,12 @@
             <button class="font-bold text-lg mb-4 block">Logout</button>
         </form>
     </li>
+
+    <li>
+        <form action="{{route('search')}}" method="POST">
+            @csrf
+            <input type="search" id="site-search" name="search" />
+            <button class="font-bold text-lg mb-4 block">Search</button>
+        </form>
+    </li>
 </ul>
